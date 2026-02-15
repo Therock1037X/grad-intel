@@ -1,4 +1,5 @@
 "use client"
+
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
@@ -21,20 +22,23 @@ export default function DashboardPage() {
 
       {/* HEADER */}
       <div style={header}>
-        <div style={{ fontWeight: "bold", fontSize: "20px" }}>
-          🎓 GradIntel
+
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <img
+            src="/gradintel-logo.png"
+            alt="GradIntel Logo"
+            style={{ height: "36px" }}
+          />
+          <span style={{ fontWeight: "bold", fontSize: "22px" }}>
+            GradIntel
+          </span>
         </div>
 
-        <div style={{ display: "flex", gap: "24px" }}>
-          <Link href="/dashboard" style={{ color: "white", textDecoration: "none" }}>
-    👤 User Info
-  </Link>
-          <Link href="/map" style={{ color: "white", textDecoration: "none" }}>
-    🌍 Map Analysis
-  </Link>
-          <Link href="/universities" style={{ color: "white", textDecoration: "none" }}>
-    🎓 Universities
-  </Link>
+        <div style={{ display: "flex", gap: "28px", alignItems: "center" }}>
+          <Link href="/dashboard" style={navLink}>👤 User Info</Link>
+          <Link href="/map" style={navLink}>🌍 Map Analysis</Link>
+          <Link href="/universities" style={navLink}>🎓 Universities</Link>
+          <button style={chatButton}>🤖 GradIntel AI</button>
         </div>
       </div>
 
@@ -44,15 +48,17 @@ export default function DashboardPage() {
         {/* LEFT COLUMN */}
         <div style={leftColumn}>
 
-          {/* STUDENT INFO */}
+          {/* ⭐ STUDENT INFO FROM ML */}
           <div style={card}>
             <h3 style={title}>👤 Student Info</h3>
-            <p>CGPA: 8.2</p>
-            <p>IELTS: 6.5</p>
-            <p>Budget: $40,000</p>
+            <p>Name: {data.student.name}</p>
+            <p>CGPA: {data.student.cgpa}</p>
+            <p>IELTS: {data.student.ielts}</p>
+            <p>Budget: ${data.student.budget}</p>
+            <p>Target: {data.student.country}</p>
           </div>
 
-          {/* AI ACTIONS */}
+          {/* ⭐ ACTIONS FROM ML */}
           <div style={card}>
             <h3 style={title}>🧠 Recommended Actions</h3>
             {data.suggestions.map((s: string, i: number) => (
@@ -65,20 +71,20 @@ export default function DashboardPage() {
         {/* RIGHT COLUMN */}
         <div style={rightColumn}>
 
-          {/* UNIVERSITIES */}
+          {/* ⭐ UNIVERSITIES FROM ML */}
           <div style={card}>
             <h3 style={title}>🎓 Recommended Universities</h3>
-            <p>University of Toronto</p>
-            <p>University of Melbourne</p>
-            <p>TU Munich</p>
+            {data.universities.map((u: string, i: number) => (
+              <p key={i}>{u}</p>
+            ))}
           </div>
 
-          {/* AI INSIGHTS */}
+          {/* ⭐ INSIGHTS FROM ML */}
           <div style={card}>
             <h3 style={title}>📊 AI Insights</h3>
-            <p>Admission Chance: {data.admissionChance}</p>
-            <p>ROI: {data.roi}</p>
-            <p>Visa Difficulty: {data.visaDifficulty}</p>
+            <p>Admission Chance: {data.insights.admissionChance}</p>
+            <p>ROI: {data.insights.roi}</p>
+            <p>Visa Difficulty: {data.insights.visaDifficulty}</p>
           </div>
 
         </div>
@@ -94,9 +100,26 @@ export default function DashboardPage() {
 const header: React.CSSProperties = {
   background: "linear-gradient(135deg, #1e3a8a, #312e81)",
   color: "white",
-  padding: "18px 40px",
+  padding: "16px 40px",
   display: "flex",
-  justifyContent: "space-between"
+  justifyContent: "space-between",
+  alignItems: "center",
+}
+
+const navLink: React.CSSProperties = {
+  color: "white",
+  textDecoration: "none",
+  fontWeight: 500
+}
+
+const chatButton: React.CSSProperties = {
+  background: "#2563eb",
+  color: "white",
+  border: "none",
+  padding: "10px 18px",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontWeight: "bold"
 }
 
 const layout: React.CSSProperties = {

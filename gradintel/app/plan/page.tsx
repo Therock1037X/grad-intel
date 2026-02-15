@@ -1,10 +1,17 @@
 "use client"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export default function PlanPage() {
   const [country, setCountry] = useState("")
   const [cgpa, setCgpa] = useState("")
   const [budget, setBudget] = useState("")
+
+  const router = useRouter()
+
+  function handleGenerate() {
+    router.push("/dashboard")   // ⭐ GO TO DASHBOARD
+  }
 
   return (
     <main
@@ -26,7 +33,7 @@ export default function PlanPage() {
           backdropFilter: "blur(18px)",
           padding: "48px",
           borderRadius: "22px",
-          width: "620px",   // ⭐ WIDER BOX
+          width: "620px",
           boxShadow: "0 14px 40px rgba(0,0,0,0.35)",
         }}
       >
@@ -54,16 +61,7 @@ export default function PlanPage() {
           value={country}
           onChange={(e) => setCountry(e.target.value)}
           placeholder="e.g. USA"
-          style={{
-            width: "100%",
-            padding: "14px",
-            marginTop: "8px",
-            marginBottom: "20px",
-            borderRadius: "10px",
-            border: "1px solid rgba(255,255,255,0.4)",
-            background: "rgba(0,0,0,0.3)",
-            color: "white",
-          }}
+          style={input}
         />
 
         {/* CGPA */}
@@ -72,16 +70,7 @@ export default function PlanPage() {
           value={cgpa}
           onChange={(e) => setCgpa(e.target.value)}
           placeholder="e.g. 8.2"
-          style={{
-            width: "100%",
-            padding: "14px",
-            marginTop: "8px",
-            marginBottom: "20px",
-            borderRadius: "10px",
-            border: "1px solid rgba(255,255,255,0.4)",
-            background: "rgba(0,0,0,0.3)",
-            color: "white",
-          }}
+          style={input}
         />
 
         {/* BUDGET */}
@@ -90,20 +79,12 @@ export default function PlanPage() {
           value={budget}
           onChange={(e) => setBudget(e.target.value)}
           placeholder="e.g. 40000"
-          style={{
-            width: "100%",
-            padding: "14px",
-            marginTop: "8px",
-            marginBottom: "30px",
-            borderRadius: "10px",
-            border: "1px solid rgba(255,255,255,0.4)",
-            background: "rgba(0,0,0,0.3)",
-            color: "white",
-          }}
+          style={inputLast}
         />
 
-        {/* BUTTON */}
+        {/* ⭐ BUTTON NOW WORKS */}
         <button
+          onClick={handleGenerate}
           style={{
             width: "100%",
             padding: "16px",
@@ -120,4 +101,23 @@ export default function PlanPage() {
       </div>
     </main>
   )
+}
+
+
+// INPUT STYLES
+
+const input: React.CSSProperties = {
+  width: "100%",
+  padding: "14px",
+  marginTop: "8px",
+  marginBottom: "20px",
+  borderRadius: "10px",
+  border: "1px solid rgba(255,255,255,0.4)",
+  background: "rgba(0,0,0,0.3)",
+  color: "white",
+}
+
+const inputLast: React.CSSProperties = {
+  ...input,
+  marginBottom: "30px",
 }

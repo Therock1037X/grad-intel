@@ -1,47 +1,51 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import pandas as pd
+from ml_engine import gradintel_brain
+from pydantic import BaseModel
 
 app = FastAPI()
 
-# ⭐ CORS — allow frontend
+# allow frontend access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ROOT
-@app.get("/")
-def home():
-    return {"message": "GradIntel AI Backend Running"}
-
-# AI PREDICTION
 @app.get("/predict")
 def predict():
+
+    actions, universities, insights, mapData, student = gradintel_brain()
+
     return {
-        "admissionChance": "72%",
-        "roi": "High",
-        "visaDifficulty": "Medium",
-        "suggestions": [
-            "Improve IELTS score",
-            "Apply to safety universities",
-            "Prepare financial documents"
-        ]
+        "student": student,
+        "suggestions": actions,
+        "universities": universities,
+        "insights": insights,
+        "mapData": mapData
     }
+class ChatRequest(BaseModel):
+    message: str
 
-# UNIVERSITIES FROM CSV
-@app.get("/universities")
-def get_universities():
-    df = pd.read_csv("main_data.csv")
+@app.post("/chat")
+def chat_ai(req: ChatRequest):
 
-    data = df[[
-        "University",
-        "Latitude",
-        "Longitude",
-        "AcceptanceRate"
-    ]].dropna()
+    msg = req.message.lower()
 
-    return data.to_dict(orient="records")
+    if "ielts" in msg:
+        return {"reply": "Your IELTS should be at least 7.5 for top universities."}
+
+    if "country" in msg:
+        return {"reply": "USA and Canada match your profile best."}
+
+    if "visa" in msg:
+        return {"reply": "Visa difficulty is medium for USA."}
+
+    if "roi" in msg:
+        return {"reply": "Computer Science programs provide highest ROI."}
+
+    if "university" in msg:
+        return {"reply": "Consider ASU, University of Texas, TU Munich."}
+
+    return {"reply": "Focus on academics and English proficiency."}
